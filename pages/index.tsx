@@ -3,7 +3,7 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { ChangeEventHandler, FormEvent, useState } from 'react'
-import { IPost, IOptions } from '../types/types'
+import { IOptions } from '../types/types'
 import useFilter from '../lib/useFilter'
 import Post from '../components/Post'
 
@@ -53,8 +53,6 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {console.log(filtredPosts)}
-
       <button onClick={handleActiveBtn}>Фильтр</button>
 
       {filtredPosts.map((post) => <Post post={post} key={post.id} /> ) }
@@ -84,9 +82,9 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-
-  const data = await fetch('http://localhost:3000/api/posts');
-  const posts = await data.json();
+  //const data = await fetch('http://localhost:3000/api/posts');
+  //const posts = await data.json();
+  const posts = require('./_posts/posts.json');
   return {
     props: {
       posts
