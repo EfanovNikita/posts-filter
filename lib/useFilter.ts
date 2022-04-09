@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IPost, IOptions } from "../../types/types";
+import { IPost, IOptions } from "../types/types";
 
 export default function useFilter(posts: IPost[], options?: IOptions): [IPost[], (options: IOptions) => void] {
 

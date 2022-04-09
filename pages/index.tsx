@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { ChangeEventHandler, FormEvent, useState } from 'react'
 import { IPost, IOptions } from '../types/types'
-import useFilter from './lib/useFilter'
+import useFilter from '../lib/useFilter'
 import Post from '../components/Post'
 
 const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
