@@ -1,9 +1,51 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { GetStaticProps, InferGetStaticPropsType } from 'next'
+import { ChangeEventHandler, FormEvent, useState } from 'react'
+import { IPost, IOptions } from '../types/types'
+import useFilter from './lib/useFilter'
+import Post from '../components/Post'
 
-const Home: NextPage = () => {
+const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [data, setData] = useState<IPost[]>(posts);
+  const [radioBtn, setRadioBtn] = useState<IOptions['sort']>('ASC');
+  const [active, setActive] = useState(false);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const options = {
+      sort: radioBtn,
+      filter: {
+        name,
+        value: description
+      }
+    };
+    let filtredData = useFilter(posts, options);
+    setActive(!active);
+    setData(filtredData);
+  }
+
+  const handleChangeValue: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setDescription(e.currentTarget.value);
+  }
+  const handleChangeName: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setName(e.currentTarget.value)
+  }
+
+  const handleRadioASC: ChangeEventHandler<HTMLInputElement> = () => {
+    setRadioBtn('ASC')
+  }
+  const handleRadioDESC: ChangeEventHandler<HTMLInputElement> = () => {
+    setRadioBtn('DESC')
+  }
+
+  const handleActiveBtn = () => {
+    setActive(!active)
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -12,61 +54,43 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+      <button onClick={handleActiveBtn}>Фильтр</button>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
+      {data.map((post) => <Post post={post} key={post.id} /> ) }
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <form onSubmit={handleSubmit} className={`${styles.filter} ${active && styles.active}`} >
+        <label className={styles.textInput}>
+          Name
+          <input type='text' name='name' onChange={handleChangeName} value={name}/>
+        </label>
+        <label className={styles.textInput}>
+          Value
+          <input type='text' name='value' onChange={handleChangeValue} value={description}/>
+        </label>
+        <label className={styles.radioBtn}>
+          По возрастанию
+          <input type='radio' checked={radioBtn === 'ASC'} onChange={handleRadioASC} />
+        </label>
+        <label className={styles.radioBtn}>
+          По убыванию
+          <input type='radio' checked={radioBtn === 'DESC'} onChange={handleRadioDESC} />
+        </label>
+        <input type='submit' value='Отфильтровать' />
+        <button onClick={handleActiveBtn}>Закрыть</button>
+      </form>
     </div>
   )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+
+  const data = await fetch('http://localhost:3000/api/posts');
+  const posts = await data.json();
+  return {
+    props: {
+      posts
+    }
+  }
 }
 
 export default Home
