@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { ChangeEventHandler, FormEvent, useState } from 'react'
+import { ChangeEventHandler, FormEvent, useEffect, useState } from 'react'
 import { IPost, IOptions } from '../types/types'
 import useFilter from './lib/useFilter'
 import Post from '../components/Post'
@@ -13,6 +13,11 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
   const [data, setData] = useState<IPost[]>(posts);
   const [radioBtn, setRadioBtn] = useState<IOptions['sort']>('ASC');
   const [active, setActive] = useState(false);
+  const [filterOptions, setFilterOptions] = useState<IOptions | null>(null);
+
+  useEffect(() => {
+    filterOptions && setData(useFilter(posts, filterOptions));
+  }, [filterOptions])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,9 +28,8 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
         value: description
       }
     };
-    let filtredData = useFilter(posts, options);
     setActive(!active);
-    setData(filtredData);
+    setFilterOptions(options);
   }
 
   const handleChangeValue: ChangeEventHandler<HTMLInputElement> = (e) => {
