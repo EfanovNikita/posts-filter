@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { ChangeEventHandler, FormEvent, useEffect, useState } from 'react'
+import { ChangeEventHandler, FormEvent, useState } from 'react'
 import { IPost, IOptions } from '../types/types'
 import useFilter from './lib/useFilter'
 import Post from '../components/Post'
@@ -10,14 +10,9 @@ import Post from '../components/Post'
 const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [data, setData] = useState<IPost[]>(posts);
   const [radioBtn, setRadioBtn] = useState<IOptions['sort']>('ASC');
   const [active, setActive] = useState(false);
-  const [filterOptions, setFilterOptions] = useState<IOptions | null>(null);
-
-  useEffect(() => {
-    filterOptions && setData(useFilter(posts, filterOptions));
-  }, [filterOptions])
+  const [filtredPosts, filter] = useFilter(posts);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,7 +24,7 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
       }
     };
     setActive(!active);
-    setFilterOptions(options);
+    filter(options);
   }
 
   const handleChangeValue: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -58,9 +53,11 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      {console.log(filtredPosts)}
+
       <button onClick={handleActiveBtn}>Фильтр</button>
 
-      {data.map((post) => <Post post={post} key={post.id} /> ) }
+      {filtredPosts.map((post) => <Post post={post} key={post.id} /> ) }
 
       <form onSubmit={handleSubmit} className={`${styles.filter} ${active && styles.active}`} >
         <label className={styles.textInput}>
@@ -80,7 +77,7 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
           <input type='radio' checked={radioBtn === 'DESC'} onChange={handleRadioDESC} />
         </label>
         <input type='submit' value='Отфильтровать' />
-        <button onClick={handleActiveBtn}>Закрыть</button>
+        <button type='button' onClick={handleActiveBtn} >Закрыть</button>
       </form>
     </div>
   )
