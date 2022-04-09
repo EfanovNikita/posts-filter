@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { IPost, IOptions } from "../types/types";
 
-export default function useFilter(posts: IPost[], options?: IOptions): [IPost[], (options: IOptions) => void] {
+export default function useFilter(posts: IPost[]): [IPost[], (options: IOptions) => void] {
 
     let [filtredPosts, setPosts] = useState(posts);
     
     const filter = (options: IOptions) => {
         const { name, value } = options.filter;
         let newPosts = [...posts];
-        name && (newPosts = posts.filter(post =>
+        name && (newPosts = newPosts.filter(post =>
             post.title.toLocaleLowerCase().includes(name.toLocaleLowerCase())));
 
-        value && (newPosts = posts.filter(post =>
+        value && (newPosts = newPosts.filter(post =>
             post.description.toLocaleLowerCase().includes(value.toLocaleLowerCase())));
 
         switch (options.sort) {
