@@ -51,6 +51,7 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
     setName('');
     setDescription('');
     const options = createOptions();
+    setActive(!active);
     filter(options);
   }
 
