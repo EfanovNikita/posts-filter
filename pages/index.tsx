@@ -14,35 +14,44 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
   const [active, setActive] = useState(false);
   const [filtredPosts, filter] = useFilter(posts);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const options = {
+  const createOptions: () => IOptions = () => {
+    return {
       sort: radioBtn,
       filter: {
         name,
         value: description
       }
-    };
+    }
+  }
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const options = createOptions();
     setActive(!active);
     filter(options);
   }
 
   const handleChangeValue: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setDescription(e.currentTarget.value);
+    setDescription(e.currentTarget.value)
   }
   const handleChangeName: ChangeEventHandler<HTMLInputElement> = (e) => {
     setName(e.currentTarget.value)
   }
-
   const handleRadioASC: ChangeEventHandler<HTMLInputElement> = () => {
     setRadioBtn('ASC')
   }
   const handleRadioDESC: ChangeEventHandler<HTMLInputElement> = () => {
     setRadioBtn('DESC')
   }
-
   const handleActiveBtn = () => {
     setActive(!active)
+  }
+  const clearForm = () => {
+    setRadioBtn('ASC');
+    setName('');
+    setDescription('');
+    const options = createOptions();
+    filter(options);
   }
 
   return (
@@ -60,7 +69,7 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
       <form onSubmit={handleSubmit} className={`${styles.filter} ${active && styles.active}`} >
         <label className={styles.textInput}>
           Name
-          <input type='text' name='name' onChange={handleChangeName} value={name}/>
+          <input type='text' name='name' onChange={handleChangeName} value={name} />
         </label>
         <label className={styles.textInput}>
           Value
@@ -75,7 +84,7 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
           <input type='radio' checked={radioBtn === 'DESC'} onChange={handleRadioDESC} />
         </label>
         <input type='submit' value='Отфильтровать' />
-        <button type="reset">Отчистить фильтр</button>
+        <button type='button' onClick={clearForm}>Отчистить фильтр</button>
         <button type='button' onClick={handleActiveBtn} >Закрыть</button>
       </form>
     </div>
