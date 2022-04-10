@@ -7,13 +7,13 @@
   grid-template: auto / 1fr;
   gap: 10px;
   border: 1px solid #0070f3;
-  margin: 1rem 2rem;
+  padding: 1rem 2rem;
   border-radius: 5px;
   position: absolute;
   transform: translateY(-600px);
   left: 0;
   top: 0;
-  width: 100%;
+  width: 50%;
   background-color: white;
   transition: transform 0.3s ease-in-out;
 }
@@ -34,4 +34,10 @@
 
 .active {
   transform: translateY(0);
+}
+
+@media(max-width: 600px) {
+  .filter {
+    width: 100%;
+  }
 }
