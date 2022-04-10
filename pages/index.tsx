@@ -50,9 +50,6 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
     setRadioBtn('ASC');
     setName('');
     setDescription('');
-    const options = createOptions();
-    setActive(!active);
-    filter(options);
   }
 
   return (
