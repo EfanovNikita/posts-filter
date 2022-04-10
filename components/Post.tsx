@@ -1,6 +1,6 @@
 import React from "react"
 import { IPost } from "../types/types"
-import styles from './Post.module.css'
+import styles from '../styles/Post.module.css'
 
 type Props = {
     post: IPost
