@@ -75,6 +75,7 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
           <input type='radio' checked={radioBtn === 'DESC'} onChange={handleRadioDESC} />
         </label>
         <input type='submit' value='Отфильтровать' />
+        <button type="reset">Отчистить фильтр</button>
         <button type='button' onClick={handleActiveBtn} >Закрыть</button>
       </form>
     </div>

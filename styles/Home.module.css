@@ -1,5 +1,5 @@
 .container {
-  padding: 0 2rem;
+  margin: 0 2rem;
 }
 
 .filter {
@@ -7,13 +7,15 @@
   grid-template: auto / 1fr;
   gap: 10px;
   border: 1px solid #0070f3;
-  padding: 1rem 2rem;
+  margin: 1rem 2rem;
   border-radius: 5px;
   position: absolute;
-  top: -600px;
+  transform: translateY(-600px);
   left: 0;
+  top: 0;
   width: 100%;
   background-color: white;
+  transition: transform 0.3s ease-in-out;
 }
 
 .filter input[type="radio"] {
@@ -31,5 +33,5 @@
 }
 
 .active {
-  top: 0px;
+  transform: translateY(0);
 }
