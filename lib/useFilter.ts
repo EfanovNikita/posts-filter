@@ -1,28 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IPost, IOptions } from "../types/types";
 
-export default function useFilter(posts: IPost[]): [IPost[], (options: IOptions) => void] {
-
-    let [filtredPosts, setPosts] = useState(posts);
+export default function useFilter(posts: IPost[], options: IOptions | null) {
     
-    const filter = (options: IOptions) => {
-        const { name, value } = options.filter;
-        let newPosts = [...posts];
-        name && (newPosts = newPosts.filter(post =>
-            post.title.toLocaleLowerCase().includes(name.toLocaleLowerCase())));
+    const [arrPosts, setPosts] = useState(posts);
 
-        value && (newPosts = newPosts.filter(post =>
-            post.description.toLocaleLowerCase().includes(value.toLocaleLowerCase())));
+    useEffect(() => {
+        if (options) {
+            const { name, value } = options.filter;
+            let newPosts = [...posts];
+            name && (newPosts = newPosts.filter(post =>
+                post.title.toLocaleLowerCase().includes(name.toLocaleLowerCase())));
 
-        switch (options.sort) {
-            case 'ASC':
-                newPosts.sort((aPost, bPost) => aPost.id - bPost.id);
-                break
-            case 'DESC':
-                newPosts.sort((aPost, bPost) => bPost.id - aPost.id);
-                break
+            value && (newPosts = newPosts.filter(post =>
+                post.description.toLocaleLowerCase().includes(value.toLocaleLowerCase())));
+
+            switch (options.sort) {
+                case 'ASC':
+                    newPosts.sort((aPost, bPost) => aPost.id - bPost.id);
+                    break
+                case 'DESC':
+                    newPosts.sort((aPost, bPost) => bPost.id - aPost.id);
+                    break
+            }
+            setPosts(newPosts);
         }
-        setPosts(newPosts);
-    }
-    return [filtredPosts, filter]
+    }, [options]);
+
+    return arrPosts
 }

@@ -12,7 +12,8 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
   const [description, setDescription] = useState(''); //значение input name='value'
   const [radioBtn, setRadioBtn] = useState<IOptions['sort']>('ASC'); //значение радио кнопки
   const [active, setActive] = useState(false); //открытая/закрытая форма
-  const [filtredPosts, filter] = useFilter(posts); //
+  const [options, setOptions] = useState<IOptions | null>(null); // опции фильтра
+  const filtredPosts = useFilter(posts, options); // возвращает отфильтрованные данные
   //создаем параметры фильтра
   const createOptions: () => IOptions = () => {
     return {
@@ -28,7 +29,7 @@ const Home: NextPage = ({ posts }: InferGetStaticPropsType<typeof getStaticProps
     e.preventDefault();
     const options = createOptions();
     setActive(!active);
-    filter(options);
+    setOptions(options);
   }
   // контролируем input'ы
   const handleChangeValue: ChangeEventHandler<HTMLInputElement> = (e) => {
