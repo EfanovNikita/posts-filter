@@ -1,14 +1,21 @@
-export interface IOptions {
-    sort: 'ASC' | 'DESC';
-    filter: {
-        name: string;
-        value: string;
-    };
+export interface IPost {
+    title: string,
+    description: string,
+    id: number,
 }
 
-export interface IPost {
-    id: number;
-    title: string;
-    description: string;
-    image: string;
+export interface EntitiesPost {
+    [key: string | number]: IPost
+}
+
+export interface InitialStateType {
+    ids: (number | string)[],
+    entities: EntitiesPost | {},
+    loading: 'idle' | 'loading' | 'failed',
+    error: string | null
+}
+
+export interface IFilter {
+    search: string,
+    type: string
 }

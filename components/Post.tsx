@@ -1,18 +1,19 @@
 import React from "react"
-import { IPost } from "../types/types"
 import styles from '../styles/Post.module.css'
+import type { IPost } from '../types/types'
 
 type Props = {
-    post: IPost
+    post?: IPost
 }
 
-export default function Post({ post }: Props) {
+const Post: React.FC<Props> = ({ post }) => {
     return (
         <div className={styles.post_container}>
-            <h1>{post.title}</h1>
-            <p>{post.description}</p>
-            <p>{post.image}</p>
-            <p><b>ID: </b>{post.id}</p>
+            <h1>{post?.title}</h1>
+            <p>{post?.description}</p>
+            <p><b>ID: </b>{post?.id}</p>
         </div>
     )
 }
+
+export default Post
